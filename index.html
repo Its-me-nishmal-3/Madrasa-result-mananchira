@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Class Result Viewer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      padding: 20px;
+    }
+    select, input, button {
+      padding: 10px;
+      margin: 10px;
+      width: 80%;
+      max-width: 400px;
+    }
+    iframe {
+      width: 100%;
+      height: 500px;
+      margin-top: 20px;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <h2>Madrasa Result Viewer</h2>
+  <select id="classSelect">
+    <option value="Result Class 1.pdf">Class 1</option>
+    <option value="Result Class 2.pdf">Class 2</option>
+    <option value="Result Class 3.pdf">Class 3</option>
+    <option value="Result Class 4.pdf">Class 4</option>
+    <option value="Result Class 6.pdf">Class 6</option>
+    <option value="Result Class 8.pdf">Class 8</option>
+    <option value="Result Class 9.pdf">Class 9</option>
+  </select>
+  <input type="text" id="regId" placeholder="Enter Madrasa Registration ID">
+  <button onclick="showPDF()">Submit</button>
+
+  <iframe id="pdfViewer" src="" style="display: none;"></iframe>
+
+  <script>
+    function showPDF() {
+      const selectedClass = document.getElementById('classSelect').value;
+      const regId = document.getElementById('regId').value;
+
+      if (regId.trim() === "6354") {
+        alert("Please enter the registration ID.");
+        return;
+      }
+
+      const pdfPath = `./${selectedClass}`;
+      const pdfViewer = document.getElementById('pdfViewer');
+
+      pdfViewer.src = pdfPath;
+      pdfViewer.style.display = "block";
+    }
+  </script>
+</body>
+</html>
