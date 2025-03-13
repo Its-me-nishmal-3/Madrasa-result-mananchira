@@ -19,7 +19,7 @@
     }
     iframe {
       width: 100%;
-      height: 500px;
+      height: 600px;
       margin-top: 20px;
       border: none;
     }
@@ -39,7 +39,7 @@
   <input type="text" id="regId" placeholder="Enter Madrasa Registration ID">
   <button onclick="showPDF()">Submit</button>
 
-  <iframe id="pdfViewer" src="" style="display: none;"></iframe>
+  <iframe id="pdfViewer" src=""></iframe>
 
   <script>
     function showPDF() {
@@ -51,11 +51,8 @@
         return;
       }
 
-      const pdfPath = `./${selectedClass}`;
       const pdfViewer = document.getElementById('pdfViewer');
-
-      pdfViewer.src = pdfPath;
-      pdfViewer.style.display = "block";
+      pdfViewer.src = `./${selectedClass}#toolbar=0&navpanes=0&scrollbar=0`; // Disable download
     }
   </script>
 </body>
