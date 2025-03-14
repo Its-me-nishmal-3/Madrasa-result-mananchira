@@ -22,13 +22,15 @@
         }
 
         .container {
-            background: white;
-            padding: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 0 2rem 2rem;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
             width: 100%;
-            max-width: 650px;
+            max-width: 700px;
             overflow: hidden;
+            backdrop-filter: blur(10px); /* Glassmorphism effect */
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .header {
@@ -37,12 +39,7 @@
             background: url('./bg.jpeg') no-repeat center;
             background-size: cover;
             border-radius: 20px 20px 0 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 1.5rem;
         }
 
         .header::before {
@@ -52,77 +49,89 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.3);
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4));
             border-radius: 20px 20px 0 0;
         }
 
-        .header h1, .header p {
-            position: relative;
-            z-index: 1;
+        .title-section {
+            text-align: center;
+            margin-bottom: 2rem;
         }
 
-        .header h1 {
-            font-size: 2.2rem;
-            margin-bottom: 0.3rem;
+        .title-section h1 {
+            font-size: 2rem;
+            color: #2c3e50;
+            font-weight: 600;
+            letter-spacing: 0.5px;
         }
 
-        .header p {
-            font-size: 1rem;
+        .title-section p {
+            font-size: 0.95rem;
+            color: #7f8c8d;
+            margin-top: 0.3rem;
         }
 
         .content {
-            padding: 2rem;
+            padding: 0 1rem;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
+            position: relative;
         }
 
         label {
             display: block;
             margin-bottom: 0.5rem;
-            color: #2c3e50;
+            color: #34495e;
             font-weight: 500;
+            font-size: 0.95rem;
         }
 
         select, input {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
+            padding: 12px 15px;
+            border: 1px solid rgba(224, 224, 224, 0.8);
+            border-radius: 12px;
             font-size: 1rem;
+            background: rgba(255, 255, 255, 0.7);
             transition: all 0.3s ease;
         }
 
         select:focus, input:focus {
             outline: none;
             border-color: #1abc9c;
-            box-shadow: 0 0 5px rgba(26, 188, 156, 0.3);
+            box-shadow: 0 0 8px rgba(26, 188, 156, 0.4);
+            background: white;
         }
 
         button {
             width: 100%;
             padding: 14px;
-            background: #1abc9c;
+            background: linear-gradient(90deg, #1abc9c, #16a085);
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             color: white;
             font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(26, 188, 156, 0.4);
         }
 
         button:hover {
-            background: #16a085;
+            background: linear-gradient(90deg, #16a085, #1abc9c);
+            box-shadow: 0 8px 20px rgba(26, 188, 156, 0.5);
+            transform: translateY(-2px);
         }
 
         .iframe-container {
-            margin-top: 2rem;
-            border-radius: 10px;
+            margin-top: 2.5rem;
+            border-radius: 12px;
             overflow: hidden;
-            background: #f9f9f9;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            background: rgba(249, 249, 249, 0.9);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
         }
 
         iframe {
@@ -133,19 +142,19 @@
 
         @media (max-width: 480px) {
             .container {
-                padding: 1rem;
+                padding: 0 1rem 1.5rem;
             }
             .header {
                 height: 150px;
             }
-            .header h1 {
-                font-size: 1.5rem;
+            .title-section h1 {
+                font-size: 1.6rem;
             }
-            .header p {
+            .title-section p {
                 font-size: 0.85rem;
             }
             .content {
-                padding: 1.5rem;
+                padding: 0 0.5rem;
             }
             iframe {
                 height: 350px;
@@ -155,7 +164,8 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
+        <div class="header"></div>
+        <div class="title-section">
             <h1>Darus Salam Madrasa</h1>
             <p>Mananchira, PIN: 670645 | Reg. No: 6354</p>
         </div>
@@ -164,12 +174,12 @@
                 <label for="classSelect">Select Class</label>
                 <select id="classSelect">
                     <option value="Result Class 1.pdf">Class 1</option>
-    <option value="Result Class 2.pdf">Class 2</option>
-    <option value="Result Class 3.pdf">Class 3</option>
-    <option value="Result Class 4.pdf">Class 4</option>
-    <option value="Result Class 6.pdf">Class 6</option>
-    <option value="Result Class 8.pdf">Class 8</option>
-    <option value="Result Class 9.pdf">Class 9</option>
+                    <option value="Result Class 2.pdf">Class 2</option>
+                    <option value="Result Class 3.pdf">Class 3</option>
+                    <option value="Result Class 4.pdf">Class 4</option>
+                    <option value="Result Class 6.pdf">Class 6</option>
+                    <option value="Result Class 8.pdf">Class 8</option>
+                    <option value="Result Class 9.pdf">Class 9</option>
                 </select>
             </div>
 
