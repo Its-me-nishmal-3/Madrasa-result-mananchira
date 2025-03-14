@@ -33,14 +33,6 @@
             overflow: hidden;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            opacity: 0;
-            transform: scale(0.95);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-
-        .container.active {
-            opacity: 1;
-            transform: scale(1);
         }
 
         .header {
@@ -115,124 +107,38 @@
             background: white;
         }
 
-        button {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(90deg, #1abc9c, #16a085);
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(26, 188, 156, 0.4);
+        .countdown {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            color: #34495e;
+            font-weight: 500;
         }
 
-        button:hover {
-            background: linear-gradient(90deg, #16a085, #1abc9c);
-            box-shadow: 0 8px 20px rgba(26, 188, 156, 0.5);
-            transform: translateY(-2px);
+        .countdown span {
+            color: #1abc9c;
+            font-weight: 600;
         }
 
         .pdf-container {
             margin-top: 2.5rem;
             border-radius: 12px;
-            overflow: auto; /* Enable scrolling */
+            overflow: auto;
             background: #ffffff;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             height: 500px;
             width: 100%;
-            -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
-            scrollbar-width: none; /* Hide scrollbar in Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
         .pdf-container::-webkit-scrollbar {
-            display: none; /* Hide scrollbar in Chrome, Safari */
+            display: none;
         }
 
         #pdfCanvas {
             width: 100%;
             border: none;
-        }
-
-        .launch-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.9);
-            transition: opacity 0.5s ease;
-            z-index: 10;
-            overflow: hidden;
-        }
-
-        .launch-screen.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        #launchBtn {
-            padding: 20px 30px; /* Smaller button */
-            margin: 30%;
-            background: linear-gradient(90deg, #1abc9c, #16a085);
-            border: none;
-            border-radius: 10px;
-            color: white;
-            font-size: 1rem; /* Smaller font */
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(26, 188, 156, 0.4);
-            animation: pulse 1.5s infinite ease-in-out;
-            z-index: 11;
-        }
-
-        #launchBtn:hover {
-            background: linear-gradient(90deg, #16a085, #1abc9c);
-            box-shadow: 0 6px 15px rgba(26, 188, 156, 0.5);
-            transform: translateY(-2px);
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 4px 12px rgba(26, 188, 156, 0.4);
-            }
-            50% {
-                transform: scale(1.03);
-                box-shadow: 0 6px 18px rgba(26, 188, 156, 0.6);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 4px 12px rgba(26, 188, 156, 0.4);
-            }
-        }
-
-        /* Particle Styles */
-        .particle {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(26, 188, 156, 0.6);
-            animation: float 4s infinite ease-in-out;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0);
-                opacity: 0.8;
-            }
-            50% {
-                opacity: 0.4;
-            }
-            100% {
-                transform: translateY(-100vh);
-                opacity: 0;
-            }
         }
 
         @media (max-width: 480px) {
@@ -254,17 +160,30 @@
             .pdf-container {
                 height: 350px;
             }
-            #launchBtn {
-                padding: 8px 25px;
-                font-size: 0.9rem;
-            }
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(90deg, #1abc9c, #16a085);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(26, 188, 156, 0.4);
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #16a085, #1abc9c);
+            box-shadow: 0 8px 20px rgba(26, 188, 156, 0.5);
+            transform: translateY(-2px);
         }
     </style>
 </head>
 <body>
-    <div class="launch-screen">
-        <button id="launchBtn">Launch Website</button>
-    </div>
     <div class="container">
         <div class="header"></div>
         <div class="title-section">
@@ -290,7 +209,9 @@
                 <input type="text" id="regId" placeholder="Enter Registration ID">
             </div>
 
-            <button onclick="showPDF()">View Results</button>
+            <div class="countdown" id="countdown">
+                Demo Results will be available in: <span id="timer"></span>
+            </div>
 
             <div class="pdf-container">
                 <canvas id="pdfCanvas"></canvas>
@@ -302,62 +223,30 @@
         // Configure PDF.js worker
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
 
-        // Launch function
-        function launchWebsite() {
-            const launchScreen = document.querySelector('.launch-screen');
-            const container = document.querySelector('.container');
+        // Set countdown target date: March 14, 2025, 2:30 PM IST
+        const targetDate = new Date('March 14, 2025 17:00:00 GMT+0530').getTime();
 
-            // Fade out the launch screen
-            launchScreen.classList.add('hidden');
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const timeLeft = targetDate - now;
 
-            // Scroll to top smoothly
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-
-            // Reveal the container with a slight delay
-            setTimeout(() => {
-                container.classList.add('active');
-            }, 500); // 0.5s delay
-        }
-
-        // Button click event
-        document.getElementById('launchBtn').addEventListener('click', launchWebsite);
-
-        // Enter key event
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter' && !document.querySelector('.launch-screen').classList.contains('hidden')) {
-                launchWebsite();
+            if (timeLeft <= 0) {
+                document.getElementById('countdown').innerHTML = '<button onclick="showPDF()">View Results</button>';
+                return;
             }
-        });
 
-        // Particle effect
-        const launchScreen = document.querySelector('.launch-screen');
-        function createParticle() {
-            const particle = document.createElement('div');
-            particle.classList.add('particle');
-            const size = Math.random() * 10 + 5; // Size between 5px and 15px
-            particle.style.width = `${size}px`;
-            particle.style.height = `${size}px`;
-            particle.style.left = `${Math.random() * 100}%`; // Random horizontal position
-            particle.style.bottom = '0'; // Start from bottom
-            particle.style.animationDuration = `${Math.random() * 2 + 2}s`; // Random duration between 2s and 4s
-            launchScreen.appendChild(particle);
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
-            // Remove particle after animation
-            setTimeout(() => {
-                particle.remove();
-            }, 4000); // Matches max animation duration
+            document.getElementById('timer').textContent = 
+                `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+            setTimeout(updateCountdown, 1000);
         }
 
-        // Generate particles every 200ms
-        const particleInterval = setInterval(createParticle, 200);
-        // Stop particles when launch screen is hidden
-        document.getElementById('launchBtn').addEventListener('click', () => clearInterval(particleInterval));
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') clearInterval(particleInterval);
-        });
+        updateCountdown();
 
         function showPDF() {
             const selectedClass = document.getElementById('classSelect').value;
@@ -378,13 +267,11 @@
             // Load and render the PDF
             const pdfUrl = `./${selectedClass}`;
             pdfjsLib.getDocument(pdfUrl).promise.then(function(pdf) {
-                // Get the first page (you can loop for multiple pages if needed)
                 pdf.getPage(1).then(function(page) {
-                    const viewport = page.getViewport({ scale: 1.5 }); // Adjust scale for better visibility
+                    const viewport = page.getViewport({ scale: 1.5 });
                     canvas.height = viewport.height;
                     canvas.width = viewport.width;
 
-                    // Render PDF page into canvas context
                     const renderContext = {
                         canvasContext: context,
                         viewport: viewport
