@@ -1,59 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Class Result Viewer</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      text-align: center;
-      padding: 20px;
-    }
-    select, input, button {
-      padding: 10px;
-      margin: 10px;
-      width: 80%;
-      max-width: 400px;
-    }
-    iframe {
-      width: 100%;
-      height: 600px;
-      margin-top: 20px;
-      border: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Darus Salam Madrasa - Result Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #34495e;
+            font-weight: 500;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #2ecc71;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #27ae60;
+        }
+
+        .iframe-container {
+            margin-top: 2rem;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+            }
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            iframe {
+                height: 400px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h2>Madrasa Result Viewer</h2>
-  <select id="classSelect">
-    <option value="Result Class 1.pdf">Class 1</option>
-    <option value="Result Class 2.pdf">Class 2</option>
-    <option value="Result Class 3.pdf">Class 3</option>
-    <option value="Result Class 4.pdf">Class 4</option>
-    <option value="Result Class 6.pdf">Class 6</option>
-    <option value="Result Class 8.pdf">Class 8</option>
-    <option value="Result Class 9.pdf">Class 9</option>
-  </select>
-  <input type="text" id="regId" placeholder="Enter Madrasa Registration ID">
-  <button onclick="showPDF()">Submit</button>
+    <div class="container">
+        <div class="header">
+            <h1>Darus Salam Madrasa</h1>
+            <p>Mananchira, PIN: 670645 | Reg. No: 6354</p>
+        </div>
 
-  <iframe id="pdfViewer" src=""></iframe>
+        <div class="form-group">
+            <label for="classSelect">Select Class</label>
+            <select id="classSelect">
+                <option value="Class_1_Result.pdf">Class 1</option>
+                <option value="Class_2_Result.pdf">Class 2</option>
+                <option value="Class_3_Result.pdf">Class 3</option>
+                <option value="Class_4_Result.pdf">Class 4</option>
+                <option value="Class_6_Result.pdf">Class 6</option>
+                <option value="Class_8_Result.pdf">Class 8</option>
+                <option value="Class_9_Result.pdf">Class 9</option>
+            </select>
+        </div>
 
-  <script>
-    function showPDF() {
-      const selectedClass = document.getElementById('classSelect').value;
-      const regId = document.getElementById('regId').value;
+        <div class="form-group">
+            <label for="regId">Registration ID</label>
+            <input type="text" id="regId" placeholder="Enter Registration ID">
+        </div>
 
-      if (regId.trim() === "") {  // Fixed the condition
-        alert("Please enter the registration ID.");
-        return;
-      }
+        <button onclick="showPDF()">View Results</button>
 
-      const pdfViewer = document.getElementById('pdfViewer');
-      pdfViewer.src = `./${selectedClass}#toolbar=0&navpanes=0&scrollbar=0`;
-    }
-  </script>
+        <div class="iframe-container">
+            <iframe id="pdfViewer" src=""></iframe>
+        </div>
+    </div>
+
+    <script>
+        function showPDF() {
+            const selectedClass = document.getElementById('classSelect').value;
+            const regId = document.getElementById('regId').value.trim();
+            const pdfViewer = document.getElementById('pdfViewer');
+
+            if (!regId) {
+                alert("Please enter your Registration ID.");
+                return;
+            }
+
+            // Basic registration validation (you can enhance this)
+            if (regId !== "6354") {
+                alert("Invalid Registration ID. Please contact the Madrasa administration.");
+                return;
+            }
+
+            pdfViewer.src = `./${selectedClass}#toolbar=0&navpanes=0&scrollbar=0`;
+        }
+    </script>
 </body>
 </html>
