@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Darus Salam Madrasa - Result Viewer</title>
+    <!-- Include PDF.js from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -125,23 +127,25 @@
             transform: translateY(-2px);
         }
 
-        .iframe-container {
+        .pdf-container {
             margin-top: 2.5rem;
             border-radius: 12px;
-            overflow: hidden;
+            overflow: auto; /* Enable scrolling */
             background: #ffffff;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-            position: relative;
+            height: 500px;
             width: 100%;
-            height: 500px; /* Match iframe height */
+            -ms-overflow-style: none; /* Hide scrollbar in IE and Edge */
+            scrollbar-width: none; /* Hide scrollbar in Firefox */
         }
 
-        embed {
+        .pdf-container::-webkit-scrollbar {
+            display: none; /* Hide scrollbar in Chrome, Safari */
+        }
+
+        #pdfCanvas {
             width: 100%;
-            height: 100%;
             border: none;
-            display: block;
         }
 
         @media (max-width: 480px) {
@@ -160,7 +164,7 @@
             .content {
                 padding: 0 0.5rem;
             }
-            .iframe-container {
+            .pdf-container {
                 height: 350px;
             }
         }
@@ -194,17 +198,21 @@
 
             <button onclick="showPDF()">View Results</button>
 
-            <div class="iframe-container">
-                <embed id="pdfViewer" src="" type="application/pdf">
+            <div class="pdf-container">
+                <canvas id="pdfCanvas"></canvas>
             </div>
         </div>
     </div>
 
     <script>
+        // Configure PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+
         function showPDF() {
             const selectedClass = document.getElementById('classSelect').value;
             const regId = document.getElementById('regId').value.trim();
-            const pdfViewer = document.getElementById('pdfViewer');
+            const canvas = document.getElementById('pdfCanvas');
+            const context = canvas.getContext('2d');
 
             if (!regId) {
                 alert("Please enter your Registration ID.");
@@ -216,7 +224,25 @@
                 return;
             }
 
-            pdfViewer.src = `./${selectedClass}`; // Removed restrictive parameters
+            // Load and render the PDF
+            const pdfUrl = `./${selectedClass}`;
+            pdfjsLib.getDocument(pdfUrl).promise.then(function(pdf) {
+                // Get the first page (you can loop for multiple pages if needed)
+                pdf.getPage(1).then(function(page) {
+                    const viewport = page.getViewport({ scale: 1.5 }); // Adjust scale for better visibility
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    // Render PDF page into canvas context
+                    const renderContext = {
+                        canvasContext: context,
+                        viewport: viewport
+                    };
+                    page.render(renderContext);
+                });
+            }).catch(function(error) {
+                alert("Error loading PDF: " + error.message);
+            });
         }
     </script>
 </body>
