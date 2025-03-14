@@ -33,6 +33,14 @@
             overflow: hidden;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .container.active {
+            opacity: 1;
+            transform: scale(1);
         }
 
         .header {
@@ -148,6 +156,85 @@
             border: none;
         }
 
+        .launch-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.9);
+            transition: opacity 0.5s ease;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        .launch-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #launchBtn {
+            padding: 20px 30px; /* Smaller button */
+            margin: 30%;
+            background: linear-gradient(90deg, #1abc9c, #16a085);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem; /* Smaller font */
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(26, 188, 156, 0.4);
+            animation: pulse 1.5s infinite ease-in-out;
+            z-index: 11;
+        }
+
+        #launchBtn:hover {
+            background: linear-gradient(90deg, #16a085, #1abc9c);
+            box-shadow: 0 6px 15px rgba(26, 188, 156, 0.5);
+            transform: translateY(-2px);
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 4px 12px rgba(26, 188, 156, 0.4);
+            }
+            50% {
+                transform: scale(1.03);
+                box-shadow: 0 6px 18px rgba(26, 188, 156, 0.6);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 4px 12px rgba(26, 188, 156, 0.4);
+            }
+        }
+
+        /* Particle Styles */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(26, 188, 156, 0.6);
+            animation: float 4s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+                opacity: 0.8;
+            }
+            50% {
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateY(-100vh);
+                opacity: 0;
+            }
+        }
+
         @media (max-width: 480px) {
             .container {
                 padding: 0 1rem 1.5rem;
@@ -167,27 +254,34 @@
             .pdf-container {
                 height: 350px;
             }
+            #launchBtn {
+                padding: 8px 25px;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="launch-screen">
+        <button id="launchBtn">Launch Website</button>
+    </div>
     <div class="container">
         <div class="header"></div>
         <div class="title-section">
-            <h1>Darus Salam Madrasa</h1>
-            <p>Mananchira, PIN: 670645 | Reg. No: 6354</p>
+            <h1>Darusalam Madrasa</h1>
+            <p>Mananchira, PIN: 670645</p>
         </div>
         <div class="content">
             <div class="form-group">
                 <label for="classSelect">Select Class</label>
                 <select id="classSelect">
                     <option value="Result Class 1.pdf">Class 1</option>
-                    <option value="Result Class 2.pdf">Class 2</option>
+                    <!-- <option value="Result Class 2.pdf">Class 2</option>
                     <option value="Result Class 3.pdf">Class 3</option>
                     <option value="Result Class 4.pdf">Class 4</option>
                     <option value="Result Class 6.pdf">Class 6</option>
                     <option value="Result Class 8.pdf">Class 8</option>
-                    <option value="Result Class 9.pdf">Class 9</option>
+                    <option value="Result Class 9.pdf">Class 9</option> -->
                 </select>
             </div>
 
@@ -207,6 +301,63 @@
     <script>
         // Configure PDF.js worker
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+
+        // Launch function
+        function launchWebsite() {
+            const launchScreen = document.querySelector('.launch-screen');
+            const container = document.querySelector('.container');
+
+            // Fade out the launch screen
+            launchScreen.classList.add('hidden');
+
+            // Scroll to top smoothly
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+
+            // Reveal the container with a slight delay
+            setTimeout(() => {
+                container.classList.add('active');
+            }, 500); // 0.5s delay
+        }
+
+        // Button click event
+        document.getElementById('launchBtn').addEventListener('click', launchWebsite);
+
+        // Enter key event
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' && !document.querySelector('.launch-screen').classList.contains('hidden')) {
+                launchWebsite();
+            }
+        });
+
+        // Particle effect
+        const launchScreen = document.querySelector('.launch-screen');
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            const size = Math.random() * 10 + 5; // Size between 5px and 15px
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${Math.random() * 100}%`; // Random horizontal position
+            particle.style.bottom = '0'; // Start from bottom
+            particle.style.animationDuration = `${Math.random() * 2 + 2}s`; // Random duration between 2s and 4s
+            launchScreen.appendChild(particle);
+
+            // Remove particle after animation
+            setTimeout(() => {
+                particle.remove();
+            }, 4000); // Matches max animation duration
+        }
+
+        // Generate particles every 200ms
+        const particleInterval = setInterval(createParticle, 200);
+        // Stop particles when launch screen is hidden
+        document.getElementById('launchBtn').addEventListener('click', () => clearInterval(particleInterval));
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') clearInterval(particleInterval);
+        });
 
         function showPDF() {
             const selectedClass = document.getElementById('classSelect').value;
