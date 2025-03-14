@@ -46,13 +46,13 @@
       const selectedClass = document.getElementById('classSelect').value;
       const regId = document.getElementById('regId').value;
 
-      if (regId.trim() === "6354") {
+      if (regId.trim() === "") {  // Fixed the condition
         alert("Please enter the registration ID.");
         return;
       }
 
       const pdfViewer = document.getElementById('pdfViewer');
-      pdfViewer.src = `./${selectedClass}#toolbar=0&navpanes=0&scrollbar=0`; // Disable download
+      pdfViewer.src = `./${selectedClass}#toolbar=0&navpanes=0&scrollbar=0`;
     }
   </script>
 </body>
